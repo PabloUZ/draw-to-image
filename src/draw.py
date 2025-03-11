@@ -1,6 +1,7 @@
 import os
 import tkinter as tk
 from PIL import Image, ImageDraw
+from .config.config import params
 
 class DrawingApp:
     def __init__(self, root, letter, number):
@@ -10,10 +11,10 @@ class DrawingApp:
         self.root = root
         self.root.title(f"Draw the letter {self.letter}, press 's' to save and 'q' to quit")
 
-        self.canvas = tk.Canvas(root, bg="white", width=150, height=150)
+        self.canvas = tk.Canvas(root, bg="white", width=params['IMAGE_SIZE'][0], height=params['IMAGE_SIZE'][1])
         self.canvas.pack()
 
-        self.image = Image.new("RGB", (150, 150), "white")
+        self.image = Image.new("RGB", params['IMAGE_SIZE'], "white")
         self.draw = ImageDraw.Draw(self.image)
 
         self.canvas.bind("<B1-Motion>", self.paint)
@@ -28,11 +29,11 @@ class DrawingApp:
 
     def save_image(self, event):
         base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
-        save_dir = os.path.join(base_dir, "vowels", self.letter)
+        save_dir = os.path.join(base_dir, "OUTPUT", params['IMAGE_PATH'], self.letter)
         if not os.path.exists(save_dir):
             os.makedirs(save_dir)
-        self.image.save(os.path.join(save_dir, f"{self.letter}{self.number}.png"))
-        print(f"Imagen guardada como {self.letter}{self.number}.png")
+        self.image.save(os.path.join(save_dir, f"{self.letter}{self.number}.{params['IMAGE_FORMAT']}"))
+        print(f"Imagen guardada como {self.letter}{self.number}.{params['IMAGE_FORMAT']}")
         self.root.destroy()
 
     def quit(self, event):

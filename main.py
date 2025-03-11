@@ -3,11 +3,14 @@ from src.view_examples import verify
 import os
 import zipfile
 
+from src.config.config import params
+
+
 def get_missing():
     total = [{
         "letter": l,
-        "numbers": [i for i in range(1, 21) if not os.path.exists(f"vowels/{l}/{l}{i}.png")]
-    } for l in "AEIOUaeiou"]
+        "numbers": [i for i in range(1, params['QUANTITY']+1) if not os.path.exists(os.path.join("OUTPUT", params['IMAGE_PATH'], l, f"{l}{i}.{params['IMAGE_FORMAT']}"))]
+    } for l in params['LETTERS']]
     total = [t for t in total if len(t["numbers"]) > 0]
     missing = []
     for t in total:
@@ -32,9 +35,11 @@ while (True):
         break
 
 if len(missing) == 0:
-    if os.path.exists('vowels.zip'):
-        os.remove('vowels.zip')
-    with zipfile.ZipFile('vowels.zip', 'w') as zipf:
-        for root, dirs, files in os.walk('vowels'):
+    out_path = os.path.join("OUTPUT",params['IMAGE_PATH'])
+    zip_path = f"{out_path}.zip"
+    if os.path.exists(zip_path):
+        os.remove(zip_path)
+    with zipfile.ZipFile(zip_path, 'w') as zipf:
+        for root, dirs, files in os.walk(out_path):
             for file in files:
                 zipf.write(os.path.join(root, file))

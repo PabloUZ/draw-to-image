@@ -1,9 +1,8 @@
 import os
-import shutil
 from tkinter import Button, Label
-import matplotlib.pyplot as plt
 from PIL import Image, ImageTk
 import tkinter as tk
+from .config.config import params
 
 class ImageReviewApp:
     def __init__(self, root):
@@ -27,13 +26,13 @@ class ImageReviewApp:
         base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
         total = [{
             "letter": l,
-            "numbers": [i for i in range(1, 21) if os.path.exists(os.path.join(base_dir, f"vowels/{l}/{l}{i}.png"))]
-        } for l in "AEIOUaeiou"]
+            "numbers": [i for i in range(1, 21) if os.path.exists(os.path.join(base_dir, "OUTPUT", params['IMAGE_PATH'],l,f"{l}{i}.{params['IMAGE_FORMAT']}"))]
+        } for l in params['LETTERS']]
         total = [t for t in total if len(t["numbers"]) > 0]
         saved = []
         for t in total:
             for n in t["numbers"]:
-                saved.append(os.path.join(base_dir, f"vowels/{t['letter']}/{t['letter']}{n}.png"))
+                saved.append(os.path.join(base_dir, "OUTPUT", params['IMAGE_PATH'], t['letter'], f"{t['letter']}{n}.{params['IMAGE_FORMAT']}"))
         return saved
 
     def show_image(self):
