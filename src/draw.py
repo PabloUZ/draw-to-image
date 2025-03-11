@@ -27,9 +27,11 @@ class DrawingApp:
         self.draw.ellipse([x1, y1, x2, y2], fill="black", outline="black")
 
     def save_image(self, event):
-        if not os.path.exists("vowels/"+self.letter):
-            os.makedirs("vowels/"+self.letter)
-        self.image.save(f"vowels/{self.letter}/{self.letter}{self.number}.png")
+        base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
+        save_dir = os.path.join(base_dir, "vowels", self.letter)
+        if not os.path.exists(save_dir):
+            os.makedirs(save_dir)
+        self.image.save(os.path.join(save_dir, f"{self.letter}{self.number}.png"))
         print(f"Imagen guardada como {self.letter}{self.number}.png")
         self.root.destroy()
 

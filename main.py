@@ -1,4 +1,5 @@
-from draw import open_new_window
+from src.draw import open_new_window
+from src.view_examples import verify
 import os
 import zipfile
 
@@ -18,11 +19,21 @@ def get_missing():
 missing = get_missing()
 
 stop = False
-while len(missing) > 0 and not stop:
-    m = missing.pop(0)
-    stop = open_new_window(m[0], m[1])
+while (True):
+    while len(missing) > 0 and not stop:
+        m = missing.pop(0)
+        print(f"Draw the letter {m[1]}")
+        stop = open_new_window(m[0], m[1])
+    if stop:
+        break
+    verify()
+    missing = get_missing()
+    if len(missing) == 0:
+        break
 
 if len(missing) == 0:
+    if os.path.exists('vowels.zip'):
+        os.remove('vowels.zip')
     with zipfile.ZipFile('vowels.zip', 'w') as zipf:
         for root, dirs, files in os.walk('vowels'):
             for file in files:
